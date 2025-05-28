@@ -111,7 +111,7 @@
 
     <script>
         
-        const assignments = ['VM','SK','SK','VM','Rest','PU','PU']; // Correct assignment per weekday
+        const assignments = ['SK','SK','VM','Rest','PU','PU','VM'];  // Mon-start // Corrected for Mon-start alignment
     
         const names = {'PU':'Pushap','SK':'Saksham','VM':'Vaibhav','Rest':'Rest'};
         const avatars = {
@@ -125,14 +125,22 @@
 
         function generateCalendar() {
             const container = document.getElementById('calendar');
-            for (let d = 1; d <= 30; d++) {
+            
+        for (let d = 1; d <= 30; d++) {
+            const day = new Date(2025, 5, d);
+            const weekday = (day.getDay() + 6) % 7;  // Shift so Mon=0, Sun=6
+            const assigned = assignments[weekday];
+            let specialNote = '';
+            if (d === 2) specialNote = '<em>✈️ Flight landing</em><br>';
+            if (d === 30) specialNote = '<em>🛫 Departure back</em><br>';
+    
                 const day = new Date(2025, 5, d);
                 const weekday = day.getDay();
                 const assigned = assignments[weekday];
                 const div = document.createElement('div');
                 div.className = 'day';
                 div.id = 'day' + d;
-                div.innerHTML = `<strong>June ${d}</strong><br><img src="${avatars[assigned]}" class="avatar" alt="${names[assigned]}" title="${names[assigned]}"><div class="note">${notes['day' + d] || ''}</div>`;
+                div.innerHTML = `<strong>June ${d}</strong><br><img src="${avatars[assigned]}" class="avatar" alt="${names[assigned]}" title="${names[assigned]}"><div class="note">${specialNote}${notes['day' + d] || ''}</div>`;
                 div.onclick = () => openPopup(d);
                 container.appendChild(div);
             }
